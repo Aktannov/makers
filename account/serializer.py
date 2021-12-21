@@ -31,3 +31,5 @@ class RegisterSerializer(serializers.Serializer):
         user.send_activation_mail(user.email, code)
         # TODO: отправить письмо с активацией
         return user
+
+sdfghjkl

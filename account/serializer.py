@@ -85,3 +85,52 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('Заполните все поля')
         attrs['user'] = user
         return attrs
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+
+    def validate_email(self, email):
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError('Пользователь не зарегистрирован')
+        return email
+
+    def send_code(self):
+        email = self.validated_data.get('email')
+        user = User.objects.get(email=email)
+        user.generate_activation_code()
+        send_mail(
+            'Восстановление пароля',
+            f'Ваш код подтверждения: {user.activation}',
+            'test@gmail.com',
+            [email]
+        )
+
+class ForgotPasswordFinalSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    forgotcode = serializers.CharField(required=True, min_length=8, max_length=8)
+    password = serializers.CharField(required=True, min_length=6)
+    password_confirm = serializers.CharField(required=True, min_length=6)
+
+    def validate_email(self, email):
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError('пожалуйста зарегайтесь')
+        return email
+
+    def validate_forgotpassword(self, forgotcode):
+        if not User.objects.filter(activation=forgotcode).exists():
+            raise serializers.ValidationError('Пользователь не зарегистрирован')
+        return forgotcode
+
+    def validate(self, attrs):
+        if attrs.get('password') != attrs.get('password_confirm'):
+            raise serializers.ValidationError('Пароли не совпадают')
+        return attrs
+
+    def set_pass(self):
+        email = self.validated_data.get('email')
+        password = self.validated_data.get('password')
+        user = User.objects.get(email=email)
+        user.set_password(password)
+        user.activation_code = ''
+        user.save()
+

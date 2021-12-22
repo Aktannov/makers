@@ -30,4 +30,3 @@ class RegisterSerializer(serializers.Serializer):
         code = user.generate_activation_code()
         user.send_activation_mail(user.email, code)
         return user
-sdfghj

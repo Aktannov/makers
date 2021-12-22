@@ -17,12 +17,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from shop import settings
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('account.urls')),
     path('api/v1/', include('products.urls')),
 ]
 
-
-
+if settings.DEBUG:
+    urlpatterns += static('settings.MEDIA.URL, document_root=settings.MEDIA.ROOT')
 

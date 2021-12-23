@@ -7,8 +7,6 @@ from django.contrib.auth import get_user_model, authenticate
 User = get_user_model()
 
 
-
-
 class RegisterSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     name = serializers.CharField(required=False)
@@ -133,4 +131,3 @@ class ForgotPasswordFinalSerializer(serializers.Serializer):
         user.set_password(password)
         user.activation_code = ''
         user.save()
-

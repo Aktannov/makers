@@ -1,3 +1,4 @@
+# связь с базой данных
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.core.mail import send_mail
 from django.db import models
@@ -31,7 +32,7 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=50, blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    activation_code = models.CharField(max_length=8, blank=True)
+    activation = models.CharField(max_length=8, blank=True)
 
     objects = UserManager()
     USERNAME_FIELD = 'email'
@@ -51,7 +52,7 @@ class User(AbstractBaseUser):
         from django.utils.crypto import get_random_string
 
         code = get_random_string(8)
-        self.activation_code = code
+        self.activation = code
         self.save()
         return code
 
@@ -59,6 +60,14 @@ class User(AbstractBaseUser):
     def send_activation_mail(email, code):
         message = f'Ваш код активации: {code}'
         send_mail('Активация аккаунта',
+                  message,
+                  'test@gmail.com',
+                  [email])
+
+    @staticmethod
+    def send_registration_mail(email):
+        message = f'Вы успешно зарегались'
+        send_mail('Регистрация',
                   message,
                   'test@gmail.com',
                   [email])

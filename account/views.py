@@ -1,6 +1,6 @@
 from django.core.mail import send_mail
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
@@ -11,7 +11,7 @@ from account.serializer import RegisterSerializer, LoginSerializer, ActivationSe
 
 
 class RegistrationView(APIView):
-
+    permission_classes = [AllowAny]
     def post(self, request):
         data = request.data
         serializer = RegisterSerializer(data=data)
@@ -23,7 +23,7 @@ class RegistrationView(APIView):
 
 
 class ActivationView(APIView):
-
+    permission_classes = [AllowAny]
     def post(self, request):
         data = request.data
         serializer = ActivationSerializer(data=data)
@@ -33,6 +33,7 @@ class ActivationView(APIView):
 
 
 class LoginView(ObtainAuthToken):
+    permission_classes = [AllowAny]
     serializer_class = LoginSerializer
 
 
@@ -46,6 +47,7 @@ class LogoutView(APIView):
         return Response('Вы успешно разлогинились')
 
 class ForgotPasswordView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         data = request.data
         serializer = ForgotPasswordSerializer(data=data)
@@ -53,20 +55,9 @@ class ForgotPasswordView(APIView):
         serializer.send_code()
         return Response('Вам отправлено письмо для восстановления пароля')
 
-# class ForgotPasswordView(APIView):
-#
-#     def post(self, request):
-#         data = request.data
-#         print('Fffffffffffffffffffffff')
-#
-#         serializer = ForgotPasswordSerializer(data=data)
-#         serializer.is_valid(raise_exception=True)
-#         serializer.send_code()
-#         return Response('Вам отправлено письмо для восстановления пароля')
-
 
 class ForgotPasswordFinalView(APIView):
-
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         data = request.data
         serializer = ForgotPasswordFinalSerializer(data=data)

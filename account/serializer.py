@@ -131,3 +131,4 @@ class ForgotPasswordFinalSerializer(serializers.Serializer):
         user.set_password(password)
         user.activation_code = ''
         user.save()
+

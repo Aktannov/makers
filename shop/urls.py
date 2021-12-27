@@ -23,12 +23,13 @@ from shop import settings
 
 schema_view = get_schema_view(
     openapi.Info(
-        title='makersshop',
-        default_version='v1',
-        description='Интернет магазин'
+        title='Test',
+        default_version=1,
+        description='Our internet shop',
     ),
-    public=True
+    public=True,
 )
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

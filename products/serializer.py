@@ -1,6 +1,8 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from products.models import Product, Category, Comment, Like, Favorite
+from products.models import Product, Category, Comment, Like, Favorite, Chat
 
+User = get_user_model()
 
 class ProductsListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -66,6 +68,14 @@ class FavoritesSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         validated_data['author'] = user
         return super().create(validated_data)
+
+class ChatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chat
+        fields = ['text']
+
+
+
 
 
 

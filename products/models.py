@@ -69,3 +69,9 @@ class Favorite(models.Model):
                                 on_delete=models.CASCADE,
                                 related_name='favorites')
     favorite = models.CharField(max_length=9, null=True, blank=True)
+
+class Chat(models.Model):
+    author = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               related_name='chat')
+    text = models.TextField()

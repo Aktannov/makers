@@ -7,10 +7,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from products.filters import ProductFilter
-from products.models import Product, Category, Comment, Like, Favorite
+from products.models import Product, Category, Comment, Like, Favorite, Chat
 from products.permissions import IsAdmin, IsAuthor
 from products.serializer import ProductSerializer, CategorySerializer, OtthvSerializer, LikeSerializer, \
-    FavoritesSerializer
+    FavoritesSerializer, ChatSerializer
 
 
 class ProductViewSet(ModelViewSet):
@@ -81,9 +81,10 @@ class FavoritesViewSet(ModelViewSet):
             return [IsAuthenticated()]
         return [IsAuthor()]
 
-
-
-
+class ChatViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated()]
+    queryset = Chat.objects.all()
+    serializer_class = ChatSerializer
 
 
 

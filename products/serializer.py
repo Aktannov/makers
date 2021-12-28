@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from products.models import Product, Category, Comment, Like, Favorite, Chat
+from products.models import Product, Category, Comment, Like, Favorite, Chat, Korzina
 
 User = get_user_model()
 
@@ -72,10 +72,22 @@ class FavoritesSerializer(serializers.ModelSerializer):
 class ChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chat
-        fields = ['text']
+        fields = '__all__'
 
+class KorzinaSerailizer(serializers.ModelSerializer):
+    class Meta:
+        model = Korzina
+        fields = ['product', 'korzina']
 
+    def validate_korzina(self, favorite):
+        if favorite == 'в корзине':
+            return favorite
+        return serializers.ValudationError('Если хотите добавть в корзину напишите: "в корзине"')
 
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['author'] = user
+        return super().create(validated_data)
 
 
 

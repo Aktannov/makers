@@ -70,8 +70,17 @@ class Favorite(models.Model):
                                 related_name='favorites')
     favorite = models.CharField(max_length=9, null=True, blank=True)
 
+
 class Chat(models.Model):
+    name = models.CharField(max_length=50, null=True, blank=True)
+    text = models.TextField()
+
+
+class Korzina(models.Model):
     author = models.ForeignKey(User,
                                on_delete=models.CASCADE,
-                               related_name='chat')
-    text = models.TextField()
+                               related_name='korzina')
+    product = models.ForeignKey(Product,
+                                on_delete=models.CASCADE,
+                                related_name='korzina')
+    korzina = models.CharField(max_length=19, null=True, blank=True)

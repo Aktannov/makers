@@ -7,10 +7,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from products.filters import ProductFilter
-from products.models import Product, Category, Comment, Like, Favorite, Chat
+from products.models import Product, Category, Comment, Like, Favorite, Chat, Korzina
 from products.permissions import IsAdmin, IsAuthor
 from products.serializer import ProductSerializer, CategorySerializer, OtthvSerializer, LikeSerializer, \
-    FavoritesSerializer, ChatSerializer
+    FavoritesSerializer, ChatSerializer, KorzinaSerailizer
 
 
 class ProductViewSet(ModelViewSet):
@@ -39,11 +39,7 @@ class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
 
 
-class OtthvViewSet(CreateModelMixin,
-                     UpdateModelMixin,
-                     DestroyModelMixin,
-                     ListModelMixin,
-                     GenericViewSet):
+class OtthvViewSet(ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = OtthvSerializer
 
@@ -82,10 +78,24 @@ class FavoritesViewSet(ModelViewSet):
         return [IsAuthor()]
 
 class ChatViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated()]
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
 
+    def get_permissions(self):
+        return [AllowAny()]
+
+
+
+class KorzinaViewSet(ModelViewSet):
+    queryset = Korzina.objects.all()
+    serializer_class = KorzinaSerailizer
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [IsAuthenticated()]
+        if self.action == 'list':
+            return [IsAuthenticated()]
+        return [IsAuthor()]
 
 
 
